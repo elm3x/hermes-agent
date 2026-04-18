@@ -3,11 +3,16 @@ FROM python:3.11-slim
 # Install system dependencies
 RUN apt-get update && apt-get install -y curl unzip file && apt-get clean
 
-# Install Hermes (Linux AMD64) with validation
-RUN curl -L https://github.com/HermesHQ/hermes/releases/latest/download/hermes-linux-x86_64 \
-    -o /usr/local/bin/hermes && \
-    chmod +x /usr/local/bin/hermes && \
-    file /usr/local/bin/hermes | grep "ELF 64-bit LSB executable"
+# Install Rust (for building Hermes)
+RUN apt-get update && apt-get install -y curl unzip build-essential pkg-config libssl-dev && apt-get clean
+
+# Install Rust toolchain
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Build and install Hermes from source
+RUN cargo install hermes-cli
+
 
 
 # Install OpenClaw
