@@ -13,5 +13,5 @@ WORKDIR /app
 COPY agent/ ./agent/
 COPY config.yaml .
 
-# Start the OpenClaw Hermes runtime
-CMD ["openclaw", "run", "--config", "config.yaml"]
+# Start OpenClaw (which starts Hermes internally)
+CMD ["python", "-m", "openclaw", "run", "--config", "config.yaml"]
