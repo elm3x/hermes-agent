@@ -1,1 +1,37 @@
+name: DailyDigestAgent
+description: Generates a Stoic quote, AI reflection, and news summary, then sends to Telegram.
+
+steps:
+  - name: Fetch Stoic Quote
+    tool: http
+    input:
+      url: "https://stoic-quotes.com/api/quote"
+
+  - name: Reflect with AI
+    tool: openrouter
+    input:
+      model: "openrouter/anthropic/claude-3.5-sonnet"
+      prompt: |
+        Provide a short reflection on this Stoic quote:
+        {{steps.Fetch_Stoic_Quote.response.quote}}
+
+  - name: Fetch News
+    tool: tavily
+    input:
+      query: "top world news today"
+
+  - name: Send to Telegram
+    tool: telegram
+    input:
+      message: |
+        🧘 Daily Stoic Digest
+
+        *Quote:*  
+        {{steps.Fetch_Stoic_Quote.response.quote}}
+
+        *Reflection:*  
+        {{steps.Reflect_with_AI.response}}
+
+        *Top News:*  
+        {{steps.Fetch_News.response}}
 
