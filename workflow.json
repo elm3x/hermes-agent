@@ -1,0 +1,50 @@
+{
+  "name": "daily_stoic_ai_digest",
+  "version": "1",
+  "description": "Generates a daily Stoic reflection combined with AI news.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "tavily_api_key": { "type": "string" }
+    },
+    "required": ["tavily_api_key"]
+  },
+  "steps": [
+    {
+      "name": "fetch_stoic",
+      "type": "model",
+      "model": "claude-3-sonnet-2025",
+      "input": {
+        "role": "user",
+        "content": "Select a meaningful passage from Epictetus, Seneca, or Marcus Aurelius. Provide the passage and a one-sentence explanation of its theme."
+      }
+    },
+    {
+      "name": "fetch_ai_news",
+      "type": "model",
+      "model": "claude-3-sonnet-2025",
+      "input": {
+        "role": "user",
+        "content": "Using Tavily (API key provided separately), identify 3 important AI news items from the last 24 hours. Summarize each in 2–3 sentences. Do not fabricate sources."
+      }
+    },
+    {
+      "name": "compose_digest",
+      "type": "model",
+      "model": "claude-3-opus-2025",
+      "input": {
+        "role": "user",
+        "content": "Combine the Stoic passage and the AI news summaries into a single 400–600 word reflection in a classical, contemplative tone. End with a concise takeaway."
+      }
+    }
+  ],
+  "output": {
+    "type": "object",
+    "properties": {
+      "digest": { "type": "string" }
+    },
+    "mapping": {
+      "digest": "compose_digest.output_text"
+    }
+  }
+}
