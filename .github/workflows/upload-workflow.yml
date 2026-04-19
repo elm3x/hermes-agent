@@ -1,0 +1,27 @@
+name: Upload Anthropic Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Upload workflow to Anthropic
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "Uploading workflow.json to Anthropic..."
+          RESPONSE=$(curl -s https://api.anthropic.com/v1/workflows \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "content-type: application/json" \
+            -d @workflow.json)
+
+          echo "Response:"
+          echo "$RESPONSE"
+
+          echo "workflow_id=$(echo "$RESPONSE" | jq -r '.id')" >> $GITHUB_OUTPUT
