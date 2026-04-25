@@ -2,7 +2,8 @@ import requests
 from ..utils.logging import log
 
 
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/messages"
+
 MODEL = "mistralai/mistral-tiny"  # Stable, high‑quality default
 
 
