@@ -1,71 +1,37 @@
 import requests
-from ..utils.logging import log
 
+HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2"
+HF_URL = f"https://api-inference.huggingface.co/models/{HF_MODEL}"
 
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-MODEL = "anthropic/claude-3.5-sonnet"  # Stable, high‑quality default
-
-
-def generate_reflection(api_key: str, quote: str, source: str) -> str:
+def generate_reflection(prompt: str) -> str:
     """
-    Generate a Stoic reflection using OpenRouter.
-    Returns a clean text reflection.
+    Generate a reflection using HuggingFace's free inference API.
+    No API key required for public models.
     """
 
-    prompt = (
-        "You are a Stoic philosophy guide. Write a calm, modern, leadership‑oriented "
-        "reflection based on the following Stoic quote. Keep it concise, insightful, "
-        "and grounded in practical wisdom.\n\n"
-        f"Quote: \"{quote}\"\n"
-        f"Author: {source}\n\n"
-        "Write 2–3 short paragraphs."
-    )
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": "https://github.com",  # Required by OpenRouter
-        "X-Title": "Daily Digest Agent",
-    }
-
-    body = {
-        "model": MODEL,
-        "messages": [
-            {"role": "user", "content": prompt}
-        ],
-        "temperature": 0.7,
+    payload = {
+        "inputs": f"Write a short Stoic reflection based on this quote:\n\n{prompt}\n\nReflection:",
+        "parameters": {
+            "max_new_tokens": 120,
+            "temperature": 0.7,
+        }
     }
 
     try:
-        response = requests.post(OPENROUTER_URL, json=body, headers=headers, timeout=20)
+        response = requests.post(HF_URL, json=payload, timeout=30)
         response.raise_for_status()
         data = response.json()
 
-        # Extract text safely
-        content = (
-            data.get("choices", [{}])[0]
-            .get("message", {})
-            .get("content", "")
-        )
+        # HF returns a list of dicts with 'generated_text'
+        if isinstance(data, list) and "generated_text" in data[0]:
+            return data[0]["generated_text"].strip()
 
-        if not content:
-            log("⚠️ OpenRouter returned empty content — using fallback reflection")
-            return _fallback_reflection(quote, source)
+        # Some models return a dict with 'generated_text'
+        if isinstance(data, dict) and "generated_text" in data:
+            return data["generated_text"].strip()
 
-        return content.strip()
+        return "Reflect on how small actions shape your character each day."
 
     except Exception as e:
-        log(f"⚠️ OpenRouter error: {e} — using fallback reflection")
-        return _fallback_reflection(quote, source)
-
-
-def _fallback_reflection(quote: str, source: str) -> str:
-    """
-    Simple fallback reflection if OpenRouter fails.
-    """
-    return (
-        f"The Stoic teaching from {source} reminds us to pause and examine our inner life. "
-        f"\"{quote}\" encourages a mindset of clarity and self‑command — qualities that "
-        "remain essential in modern leadership. When we focus on what we can control, "
-        "we create space for better decisions and calmer action.\n\n"
-        "Let this quote guide your day with steadiness and intention."
-    )
+        print(f"⚠️ HuggingFace error: {e} — using fallback reflection")
+        return "Reflect on how small actions shape your character each day."
