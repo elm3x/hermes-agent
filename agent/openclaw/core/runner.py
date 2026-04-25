@@ -21,6 +21,7 @@ def run_daily_digest(config: dict):
 
     # 2. Generate reflection via OpenRouter
     log("🧠 Generating reflection…")
+    reflection_prompt = f"Provide a short Stoic-style reflection based on this quote:\n\n{stoic_quote}"
     reflection = generate_reflection(reflection_prompt)
 
 
