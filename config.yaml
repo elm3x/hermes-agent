@@ -1,12 +1,5 @@
-agent:
-  entrypoint: agent/daily_digest.hermes
-
-openclaw:
-  enabled: true
-
 env:
   OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
   TAVILY_API_KEY: ${TAVILY_API_KEY}
   TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
   TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
-
