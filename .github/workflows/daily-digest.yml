@@ -21,6 +21,16 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests pyyaml
+          
+      - name: Test OpenRouter API
+        run: |
+          curl -i https://openrouter.ai/api/v1/chat/completions \
+            -H "Authorization: Bearer ${{ secrets.OPENROUTER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "model": "gpt-3.5-turbo",
+              "messages": [{"role": "user", "content": "Hello"}]
+            }'
 
       - name: Run Daily Digest
         env:
