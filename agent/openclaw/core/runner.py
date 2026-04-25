@@ -21,9 +21,11 @@ def run_daily_digest(config: dict):
 
     # 2. Generate reflection via OpenRouter
     log("🧠 Generating reflection…")
-    reflection_prompt = f"Provide a short Stoic-style reflection based on this quote:\n\n{stoic_quote}"
-    reflection = generate_reflection(reflection_prompt)
-
+    reflection = generate_reflection(
+        api_key=config["env"]["OPENROUTER_API_KEY"],
+        quote=quote,
+        source=source,
+    )
 
     # 3. Fetch AI news via Tavily
     log("🤖 Fetching AI news…")
