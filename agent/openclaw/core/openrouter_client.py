@@ -1,6 +1,6 @@
 import requests
 
-HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2"
+HF_MODEL = "HuggingFaceH4/zephyr-7b-beta"
 HF_URL = f"https://api-inference.huggingface.co/models/{HF_MODEL}"
 
 def generate_reflection(prompt: str) -> str:
