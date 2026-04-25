@@ -2,9 +2,21 @@ import requests
 from ..utils.logging import log
 
 
-OPENROUTER_URL = "https://openrouter.ai/api/v1/messages"
+url = "https://openrouter.ai/api/v1/chat/completions"
 
-MODEL = "mistralai/mistral-tiny"  # Stable, high‑quality default
+headers = {
+    "Authorization": f"Bearer {api_key}",
+    "Content-Type": "application/json",
+    "HTTP-Referer": "https://openrouter.ai",
+    "X-Title": "OpenAI-Compatible"
+}
+
+payload = {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+        {"role": "user", "content": prompt}
+    ]
+}
 
 
 def generate_reflection(api_key: str, quote: str, source: str) -> str:
