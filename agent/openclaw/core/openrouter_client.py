@@ -3,7 +3,7 @@ from ..utils.logging import log
 
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-MODEL = "anthropic/claude-3.5-sonnet"  # Stable, high‑quality default
+MODEL = "openrouter/auto"  # Stable, high‑quality default
 
 
 def generate_reflection(api_key: str, quote: str, source: str) -> str:
