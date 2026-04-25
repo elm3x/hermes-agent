@@ -1,7 +1,7 @@
 import requests
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.2:1b"
+OLLAMA_MODEL = "tinyllama:latest"
 
 
 def generate_reflection(prompt: str) -> str:
@@ -10,7 +10,7 @@ def generate_reflection(prompt: str) -> str:
 
     Requires:
       - Ollama running locally (`ollama serve`)
-      - Model pulled: `ollama pull llama3.2:1b`
+      - Model pulled: `ollama pull tinyllama:latest`
     """
 
     payload = {
@@ -20,7 +20,7 @@ def generate_reflection(prompt: str) -> str:
     }
 
     try:
-        response = requests.post(OLLAMA_URL, json=payload, timeout=60)
+        response = requests.post(OLLAMA_URL, json=payload, timeout=180)
         response.raise_for_status()
         data = response.json()
 
