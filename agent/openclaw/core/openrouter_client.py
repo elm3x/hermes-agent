@@ -1,7 +1,8 @@
 import requests
 
-HF_MODEL = "HuggingFaceH4/zephyr-7b-beta"
+HF_MODEL = "google/gemma-2b-it"
 HF_URL = f"https://api-inference.huggingface.co/models/{HF_MODEL}"
+
 
 def generate_reflection(prompt: str) -> str:
     """
